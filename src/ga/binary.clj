@@ -13,3 +13,24 @@
 (defn calculate-costs [population cost-fn]
   (for [ch population]
     (assoc ch :cost (cost-fn (:genes ch)))))
+
+(defn tournament-selection [pop]
+  (->>
+   (take 4 (repeatedly #(rand-nth pop)))
+   (sort-by :cost)
+   (take 2)))
+
+
+(defn one-point-crossover
+  ([chromosomes]
+   (let [f          (first chromosomes)
+         s          (second chromosomes)
+         n-genes    (count (:genes f))
+         cut-point  (rand-int n-genes)
+         f-new      (map #(if (< %1 cut-point) %2 %3) (range n-genes) (:genes f) (:genes s))
+         s-new      (map #(if (< %1 cut-point) %3 %2) (range n-genes) (:genes f) (:genes s))]
+     [{:genes f-new :cost Double/MAX_VALUE}
+      {:genes s-new :cost Double/MAX_VALUE}]))
+
+  ([ch1 ch2]
+   (one-point-crossover [ch1 ch2])))
