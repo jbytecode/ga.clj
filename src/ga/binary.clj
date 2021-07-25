@@ -34,3 +34,9 @@
 
   ([ch1 ch2]
    (one-point-crossover [ch1 ch2])))
+
+(defn mutation [prob ch]
+  (let
+   [flip       (fn [x] (if (zero? x) 1 0))
+    new-genes (for [gene (:genes ch)] (if (< (rand) prob) (flip gene) gene))]
+    {:genes new-genes :cost Double/MAX_VALUE}))

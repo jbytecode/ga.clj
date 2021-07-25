@@ -58,3 +58,21 @@
            (= (:genes snew) [0 1 1])
            (= (:genes snew) [0 0 1])
            (= (:genes snew) [1 1 1]))))))
+
+(deftest test-mutation
+  (testing "Binary mutation with some probability"
+    (let
+     [ch            {:genes [1 1 1] :cost 3}
+      mutated1      (b/mutation 1.0 ch)
+      mutated2      (b/mutation 0.5 ch)]
+      (is (:genes mutated1) [0 0 0])
+      (is
+       (or
+        (= (:genes mutated2) [1 1 1])
+        (= (:genes mutated2) [1 1 0])
+        (= (:genes mutated2) [1 0 0])
+        (= (:genes mutated2) [0 0 0])
+        (= (:genes mutated2) [1 0 1])
+        (= (:genes mutated2) [0 1 1])
+        (= (:genes mutated2) [0 1 0])
+        (= (:genes mutated2) [0 0 1]))))))
