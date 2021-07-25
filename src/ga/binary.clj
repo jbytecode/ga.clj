@@ -8,6 +8,11 @@
    (reduce + 0
            (map #(*  %1 (Math/pow 2.0 %2)) (reverse bits) (range (count bits))))))
 
+(defn bits-to-double [bits minvalue maxvalue]
+  (let [n     (count bits)
+        denom (dec (Math/pow 2.0 n))
+        nom   (- maxvalue minvalue)] (* (bits-to-long bits) (+ minvalue (/ nom denom)))))
+
 (defn create-chromosome [n]
   {:genes (take n (repeatedly #(rand-int 2)))
    :cost Double/MAX_VALUE})

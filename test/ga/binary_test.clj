@@ -8,6 +8,12 @@
     (is (= (b/bits-to-long [1 1 1 1]) 15))
     (is (= (b/bits-to-long [1 1 0 0]) 12))))
 
+(deftest test-bits-to-double
+  (testing "Bits to double"
+    (is (= (b/bits-to-double [0 0 0] 0.0 1.0) 0.0))
+    (is (= (b/bits-to-double [1 1 1] 0.0 1.0) 1.0))
+    (is (= (b/bits-to-double [0 0 1 1] 0.0 1.0) 0.2))))
+
 (deftest test-create-chromosome
   (testing "Create binary chromosome"
     (let
