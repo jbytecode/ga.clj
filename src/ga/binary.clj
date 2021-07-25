@@ -8,6 +8,9 @@
    (reduce + 0
            (map #(*  %1 (Math/pow 2.0 %2)) (reverse bits) (range (count bits))))))
 
+(defn long-to-bits [long-value]
+  (vec (for [i (Long/toBinaryString long-value)] (Integer/valueOf (str i)))))
+
 (defn bits-to-double [bits minvalue maxvalue]
   (let [n     (count bits)
         denom (dec (Math/pow 2.0 n))

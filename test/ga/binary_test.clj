@@ -14,6 +14,12 @@
     (is (= (b/bits-to-double [1 1 1] 0.0 1.0) 1.0))
     (is (= (b/bits-to-double [0 0 1 1] 0.0 1.0) 0.2))))
 
+(deftest test-long-to-bits
+  (testing "Long to Bits"
+    (is (= (b/long-to-bits 7) [1 1 1]))
+    (is (= (b/long-to-bits 15) [1 1 1 1]))
+    (is (= (b/long-to-bits 12) [1 1 0 0]))))
+
 (deftest test-create-chromosome
   (testing "Create binary chromosome"
     (let
