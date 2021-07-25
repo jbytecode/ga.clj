@@ -76,3 +76,18 @@
         (= (:genes mutated2) [0 1 1])
         (= (:genes mutated2) [0 1 0])
         (= (:genes mutated2) [0 0 1]))))))
+
+
+(deftest test-binary-ga-all-ones-example
+  (testing "All genes are ones - example - binary ga"
+    (let
+     [all-ones-cost    (fn [genes] (reduce + 0 genes))
+      result           (b/ga
+                        :popsize 50
+                        :chsize 10
+                        :iters 500
+                        :cost-fn all-ones-cost)
+      best-solution     (:best-solution result)
+      best-cost         (:best-cost     result)]
+      (is (zero? best-cost))
+      (is (= (zero? (reduce + 0 best-solution)))))))

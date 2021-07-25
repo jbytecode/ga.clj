@@ -40,3 +40,49 @@
    [flip       (fn [x] (if (zero? x) 1 0))
     new-genes (for [gene (:genes ch)] (if (< (rand) prob) (flip gene) gene))]
     {:genes new-genes :cost Double/MAX_VALUE}))
+
+(defn generation [pop cost-fn selection-fn crossover-fn mutation-fn mutation-prob]
+  (let
+   [popsize         (count pop)
+    popc            (calculate-costs pop cost-fn)
+    new-gen         (first (for [_ (range popsize)] (->>
+                                                     popc
+                                                     (selection-fn)
+                                                     (crossover-fn)
+                                                     (map #(mutation-fn mutation-prob %1)))))
+    new-pop         (->>
+                     (concat popc (calculate-costs new-gen cost-fn))
+                     (sort-by :cost)
+                     (take popsize))] new-pop))
+
+
+(defn ga [& {:keys [popsize
+                    chsize
+                    cost-fn
+                    selection-fn
+                    mutation-fn
+                    crossover-fn
+                    mutation-prob
+                    iters] :or {popsize 20
+                                selection-fn tournament-selection
+                                mutation-fn mutation
+                                crossover-fn one-point-crossover
+                                mutation-prob 0.1
+                                iters 100}}]
+  (let [initial-population     (create-population popsize chsize)
+        generation-fn  (fn [pop]
+                         (generation
+                          pop
+                          cost-fn
+                          selection-fn
+                          crossover-fn
+                          mutation-fn
+                          mutation-prob))
+        last-population (last (take iters (iterate generation-fn initial-population)))
+        best-chromosome (first (sort-by :cost last-population))
+        best-solution   (:genes best-chromosome)
+        best-cost       (:cost best-chromosome)]
+    {:last-population last-population
+     :best-chromosome best-chromosome
+     :best-solution best-solution
+     :best-cost best-cost}))
