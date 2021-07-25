@@ -3,6 +3,11 @@
 (defn all-ones-cost [bits]
   (reduce + 0 bits))
 
+(defn bits-to-long [bits]
+  (long
+   (reduce + 0
+           (map #(*  %1 (Math/pow 2.0 %2)) (reverse bits) (range (count bits))))))
+
 (defn create-chromosome [n]
   {:genes (take n (repeatedly #(rand-int 2)))
    :cost Double/MAX_VALUE})

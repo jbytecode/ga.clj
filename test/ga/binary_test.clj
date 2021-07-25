@@ -2,6 +2,12 @@
   (:require [clojure.test :refer :all]
             [ga.binary :as b]))
 
+(deftest test-bits-to-long
+  (testing "Bits to Long"
+    (is (= (b/bits-to-long [1 1 1]) 7))
+    (is (= (b/bits-to-long [1 1 1 1]) 15))
+    (is (= (b/bits-to-long [1 1 0 0]) 12))))
+
 (deftest test-create-chromosome
   (testing "Create binary chromosome"
     (let
