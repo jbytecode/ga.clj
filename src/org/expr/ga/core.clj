@@ -1,4 +1,4 @@
-(ns ga.core
+(ns org.expr.ga.core
   (:gen-class))
 
 (defn -main

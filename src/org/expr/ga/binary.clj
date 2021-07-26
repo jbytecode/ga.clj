@@ -1,4 +1,4 @@
-(ns ga.binary)
+(ns org.expr.ga.binary)
 
 (defn all-ones-cost [bits]
   (reduce + 0 bits))

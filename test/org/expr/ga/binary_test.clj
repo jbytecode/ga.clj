@@ -1,6 +1,6 @@
-(ns ga.binary-test
+(ns org.expr.ga.binary-test
   (:require [clojure.test :refer :all]
-            [ga.binary :as b]))
+            [org.expr.ga.binary :as b]))
 
 (deftest test-bits-to-long
   (testing "Bits to Long"
@@ -133,7 +133,7 @@
                          Double/MAX_VALUE
                          (* -1 z))))
       result           (b/ga
-                        :popsize 30
+                        :popsize 50
                         :chsize 7
                         :iters 1000
                         :cost-fn objective)
