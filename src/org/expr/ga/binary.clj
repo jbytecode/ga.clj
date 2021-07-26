@@ -48,6 +48,17 @@
   ([ch1 ch2]
    (one-point-crossover [ch1 ch2])))
 
+(defn uniform-crossover
+  ([chromosomes]
+   (let
+    [[f s] chromosomes
+     genes1 (map #(if (< (rand) 0.5) %1 %2) (:genes f) (:genes s))
+     genes2 (map #(if (< (rand) 0.5) %2 %1) (:genes f) (:genes s))]
+     [{:genes (vec genes1) :cost Double/MAX_VALUE}
+      {:genes (vec genes2) :cost Double/MAX_VALUE}]))
+  ([ch1 ch2]
+   (uniform-crossover [ch1 ch2])))
+
 (defn mutation [prob ch]
   (let
    [flip       (fn [x] (if (zero? x) 1 0))

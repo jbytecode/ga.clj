@@ -77,6 +77,35 @@
            (= (:genes snew) [0 0 1])
            (= (:genes snew) [1 1 1]))))))
 
+(deftest test-uniform-chrossover
+  (testing "Uniform cross-over"
+    (let [f           {:genes [1 1 1] :cost 3}
+          s           {:genes [0 0 0] :cost 0}
+          [fnew snew] (b/uniform-crossover f s)]
+      (is (= (count (:genes fnew)) 3))
+      (is (= (count (:genes snew)) 3))
+      (is (= (:cost fnew) Double/MAX_VALUE))
+      (is (= (:cost snew) Double/MAX_VALUE))
+      (is (or
+           (= (:genes fnew) [1 1 1])
+           (= (:genes fnew) [1 1 0])
+           (= (:genes fnew) [1 0 0])
+           (= (:genes fnew) [0 0 0])
+           (= (:genes fnew) [1 0 1])
+           (= (:genes fnew) [0 1 1])
+           (= (:genes fnew) [0 1 0])
+           (= (:genes fnew) [0 0 1])
+           ))
+      (is (or
+           (= (:genes snew) [1 1 1])
+           (= (:genes snew) [1 1 0])
+           (= (:genes snew) [1 0 0])
+           (= (:genes snew) [0 0 0])
+           (= (:genes snew) [1 0 1])
+           (= (:genes snew) [0 1 1])
+           (= (:genes snew) [0 1 0])
+           (= (:genes snew) [0 0 1]))))))
+
 (deftest test-mutation
   (testing "Binary mutation with some probability"
     (let
