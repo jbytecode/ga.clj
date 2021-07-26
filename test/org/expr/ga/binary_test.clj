@@ -94,8 +94,7 @@
            (= (:genes fnew) [1 0 1])
            (= (:genes fnew) [0 1 1])
            (= (:genes fnew) [0 1 0])
-           (= (:genes fnew) [0 0 1])
-           ))
+           (= (:genes fnew) [0 0 1])))
       (is (or
            (= (:genes snew) [1 1 1])
            (= (:genes snew) [1 1 0])
@@ -170,3 +169,29 @@
       best-cost         (:best-cost     result)]
       (is (= -80 best-cost))
       (is (= [1 1 0 1 1 1 0] best-solution)))))
+
+
+(deftest test-real-optimization-with-binary-genes
+  (testing "Real-valued optimization with binary genes"
+    (let
+     [bit-len        30
+      cost-fn        (fn [bits]
+                       (let
+                        [bit-parts        (partition bit-len bits)
+                         [value1 value2]  (map #(b/bits-to-double %1 0.0 10.0) bit-parts)
+                         result           (+ (Math/abs (- value1 Math/PI)) (Math/abs (- value2 Math/E)))] result))
+      result           (b/ga
+                        :popsize 100
+                        :chsize (* bit-len 2)
+                        :iters 500
+                        :cost-fn cost-fn)
+      best-solution     (:best-solution result)
+      best-cost         (:best-cost     result)
+      paired-bits       (partition bit-len best-solution)
+      values            (map #(b/bits-to-double %1 0.0 10.0) paired-bits)]
+      (is
+       (< best-cost 0.05))
+      (is
+       (< (Math/abs (- (first values) 3.14)) 0.05))
+      (is
+       (< (Math/abs (- (second values) 2.71)) 0.05)))))
