@@ -56,6 +56,25 @@
       (is (>= (:cost worst) (:cost f)))
       (is (>= (:cost worst) (:cost s))))))
 
+(deftest test-rank-selection
+  (testing "Rank selection (never selects the worst)"
+    (let [pop             [{:genes [1 1 1 1 1] :cost Double/MAX_VALUE}
+                           {:genes [1 1 1 1 0] :cost Double/MAX_VALUE}
+                           {:genes [1 1 1 0 1] :cost Double/MAX_VALUE}
+                           {:genes [1 1 0 1 1] :cost Double/MAX_VALUE}
+                           {:genes [1 0 1 1 1] :cost Double/MAX_VALUE}
+                           {:genes [0 1 1 1 1] :cost Double/MAX_VALUE}
+                           {:genes [0 0 0 0 0] :cost Double/MAX_VALUE}
+                           ]
+          pop-with-costs  (b/calculate-costs pop b/all-ones-cost)
+          worst           (->
+                           (sort-by :cost pop-with-costs)
+                           last)
+          [f s]           (b/rank-selection pop-with-costs)]
+      (is (>= (:cost worst) (:cost f)))
+      (is (>= (:cost worst) (:cost s)))
+      (is (= (:genes worst) [1 1 1 1 1])))))
+
 
 (deftest test-one-point-chrossover
   (testing "One-point cross-over"

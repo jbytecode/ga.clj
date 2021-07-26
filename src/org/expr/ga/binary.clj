@@ -33,6 +33,20 @@
    (sort-by :cost)
    (take 2)))
 
+(defn rank-selection [pop]
+  (let
+   [popsize       (count pop)
+    ordered-pop   (sort-by :cost pop)
+    ranks         (reverse (range 1 (inc popsize)))
+    sum-ranks     (reduce + 0 ranks)
+    probs         (map #(double (/ %1 sum-ranks)) ranks)
+    cum-probs     (for [i (range 1 (inc popsize))] (reduce + 0 (take i probs)))
+    ordered-pop2  (map #(assoc %1 :prob %2) ordered-pop cum-probs)
+    [rand1 rand2] (take 2 (repeatedly rand))
+    selected1     (first (filter #(< rand1 (:prob %1)) ordered-pop2))
+    selected2     (first (filter #(< rand2 (:prob %1)) ordered-pop2))]
+    [(dissoc selected1 :prob)
+     (dissoc selected2 :prob)]))
 
 (defn one-point-crossover
   ([chromosomes]
