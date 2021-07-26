@@ -41,6 +41,9 @@
   (testing "Stopping criterion of cga"
     (is (c/stops? [1.0 1.0 1.0]))
     (is (c/stops? [0.0 0.0 0.0]))
+    (is (c/stops? [0.0 1.0 0.0]))
+    (is (c/stops? [1.0 1.0 0.0]))
+    (is (c/stops? [0.0 1.0 1.0]))
     )
   )
 
