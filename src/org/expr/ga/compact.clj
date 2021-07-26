@@ -1,17 +1,52 @@
 (ns org.expr.ga.compact)
 
-(defn sample [prob-vector]
+(defn sample
+  "Generates a vector of 1 and 0s using a probability vector <br>
+   **Example**: <br>
+   `(sample [0.5 0.5])`  => `[0 1]` <br>
+   `(sample [1.0 1.0])`  => `[1 1]` <br>
+   `(sample [0.0 0.0])`  => `[0 0]` <br>
+   "
+  [prob-vector]
   (map #(if (< (rand) %1) 1 0) prob-vector))
 
-(defn init-prob-vector [chsize]
+
+
+
+
+(defn init-prob-vector
+  "Generates an initial vector of probabilities <br>
+  **Example**: <br>
+   `(init-prob-vector 5)`  =>  `[0.5 0.5 0.5 0.5 0.5]` <br> 
+   "
+  [chsize]
   (take chsize (repeat 0.5)))
 
-(defn update-fn [winner-bit loser-bit prob popsize]
+
+
+
+
+(defn update-fn
+  "
+   Update a probability using a bit of winner and loser.
+   If the winner equals to loser, does nothing.
+   If the winner is 1, then update the prob using
+   prob := prob + 1 / popsize
+   otherwise
+   prob := prob - 1 / popsize
+  "
+  [winner-bit loser-bit prob popsize]
   (if (= winner-bit loser-bit)
-               prob
-               (if (= winner-bit 1)
-                 (+ prob (/ 1.0 popsize))
-                 (- prob (/ 1.0 popsize)))))
+    prob
+    (if (= winner-bit 1)
+      (+ prob (/ 1.0 popsize))
+      (- prob (/ 1.0 popsize)))))
+
+
+
+
+
+
 
 (defn update-prob-vector [winner loser prob-vector popsize]
   (mapv #(update-fn %1 %2 %3 popsize) winner loser prob-vector))
