@@ -18,7 +18,7 @@
                          (+
                           (Math/abs (- value1 Math/PI))
                           (Math/abs (- value2 Math/E)))))
-      result            (c/cga 100 (* bit-len 2) cost-fn)
+      result            (c/cga 1000 (* bit-len 2) cost-fn)
       best-cost         (cost-fn  result)
       paired-bits       (partition bit-len result)
       values            (map #(b/bits-to-double %1 0.0 10.0) paired-bits)]
