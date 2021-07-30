@@ -35,6 +35,6 @@
     (let
      [fns1            (e/functions-of-arity 1 e/functions)
       fns2            (e/functions-of-arity 2 e/functions)]
-      ; TODO
-      ; Complete this test
-      )))
+      (is (some #(= (:func %1) '+) fns2))
+      (is (some #(= (:func %1) '-) fns2))
+      (is (some #(= (:func %1) 'sqrt) fns1)))))
