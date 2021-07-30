@@ -64,6 +64,9 @@
     lucky-fn-op        (:func lucky-fn)
     new-expr           (cons lucky-fn-op (for [e (rest expr)] e))] new-expr))
 
+
+
+
 (defn mutate-args-with [expr functions constants]
   (let
    [r           (rand)]
@@ -79,4 +82,13 @@
   (if (< (rand) 0.5)
     (mutate-fn-with expr functions)
     (mutate-args-with expr functions constants)))
+
+
+
+(defn create-chromosome [functions constants]
+  {:genes (random-expression functions constants) :cost Double/MAX_VALUE})
+
+
+(defn create-population [popsize functions constants]
+  (take popsize (repeatedly #(create-chromosome functions constants))))
 
