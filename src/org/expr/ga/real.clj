@@ -25,14 +25,26 @@
     [{:genes genes1 :cost Double/MAX_VALUE}
      {:genes genes2 :cost Double/MAX_VALUE}]))
 
-(defn random-mutation [ch & {:keys
-                             [mutation-prob mean std]
-                             :or
-                             {mutation-prob 0.10
-                              mean 0
-                              std 1}}]
+(defn random-normal-mutation [ch & {:keys
+                                    [mutation-prob mean std]
+                                    :or
+                                    {mutation-prob 0.10
+                                     mean 0
+                                     std 1}}]
   {:genes (mapv #(if
                   (< (rand) mutation-prob)
                    (+ %1 (random-normal :mean mean :std std))
+                   %1) (:genes ch))
+   :cost Double/MAX_VALUE})
+
+(defn random-uniform-mutation [ch & {:keys
+                                     [mutation-prob lower upper]
+                                     :or
+                                     {mutation-prob 0.10
+                                      lower -1.0
+                                      upper 1.0}}]
+  {:genes (mapv #(if
+                  (< (rand) mutation-prob)
+                   (+ %1 (random-uniform lower upper))
                    %1) (:genes ch))
    :cost Double/MAX_VALUE})

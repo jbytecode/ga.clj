@@ -23,9 +23,13 @@
 (defn create-population [popsize chsize]
   (take popsize (repeatedly #(create-chromosome chsize))))
 
-(defn calculate-costs [population cost-fn]
+(defn calculate-costs-single-tread [population cost-fn]
   (for [ch population]
     (assoc ch :cost (cost-fn (:genes ch)))))
+
+(defn calculate-costs [population cost-fn]
+  (pmap
+   #(assoc %1 :cost (cost-fn (:genes %1))) population))
 
 (defn tournament-selection [pop]
   (->>

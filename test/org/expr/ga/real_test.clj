@@ -104,15 +104,48 @@
 
 
 
-(deftest test-random-mutation
-  (testing "Random mutation"
+(deftest test-random-normal-mutation
+  (testing "Random normal mutation"
     (let
      [min-range          [100 200 -300 0 -200]
       max-range          [500 300 500 100 -100]
       ch                 (r/create-chromosome min-range max-range)
-      mutated            (r/random-mutation ch :mean 0 :std 1 :mutation-prob 1.0)
+      mutated            (r/random-normal-mutation ch :mean 0 :std 1 :mutation-prob 1.0)
       min-bounds         (mapv #(- %1 100) min-range)
       max-bounds         (mapv #(+ %1 100) max-range)
+      withins-range      (map #(and (>= %1 %2) (<= %1 %3))
+                              (:genes mutated)
+                              min-bounds
+                              max-bounds)]
+
+      (is
+       (=
+        (take 5 (repeat true))
+        withins-range))
+
+      (is
+       (=
+        (count (:genes mutated))
+        5))
+
+      (is
+       (=
+        (:cost mutated)
+        Double/MAX_VALUE)))))
+
+
+
+
+
+(deftest test-random-uniform-mutation
+  (testing "Random uniform mutation"
+    (let
+     [min-range          [100 200 -300 0 -200]
+      max-range          [500 300 500 100 -100]
+      ch                 (r/create-chromosome min-range max-range)
+      mutated            (r/random-uniform-mutation ch :lower -1 :upper 1 :mutation-prob 1.0)
+      min-bounds         (mapv #(- %1 1) min-range)
+      max-bounds         (mapv #(+ %1 1) max-range)
       withins-range      (map #(and (>= %1 %2) (<= %1 %3))
                               (:genes mutated)
                               min-bounds
