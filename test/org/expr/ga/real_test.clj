@@ -2,6 +2,32 @@
   (:require [clojure.test :refer :all]
             [org.expr.ga.real :as r]))
 
+(deftest test-random-normal
+  (testing "Random values from normal distribution"
+
+    (is
+     (= "class java.util.Random"
+        (str
+         (class
+          r/rng))))
+
+    (let
+     [r       (r/random-normal)]
+      (is
+       (< r 100))
+
+      (is
+       (> r -100)))
+
+    (let
+     [r       (r/random-normal :mean 100 :std 10)]
+      (is
+       (< r 200))
+
+      (is
+       (> r -200)))))
+
+
 
 (deftest test-random-uniform
   (testing "Random uniform using ranges"
@@ -75,3 +101,34 @@
                (* alpha %1)
                (* inv-alpha %2)) (:genes ch2) (:genes ch1))
         (:genes off2))))))
+
+
+
+(deftest test-random-mutation
+  (testing "Random mutation"
+    (let
+     [min-range          [100 200 -300 0 -200]
+      max-range          [500 300 500 100 -100]
+      ch                 (r/create-chromosome min-range max-range)
+      mutated            (r/random-mutation ch :mean 0 :std 1 :mutation-prob 1.0)
+      min-bounds         (mapv #(- %1 100) min-range)
+      max-bounds         (mapv #(+ %1 100) max-range)
+      withins-range      (map #(and (>= %1 %2) (<= %1 %3))
+                              (:genes mutated)
+                              min-bounds
+                              max-bounds)]
+
+      (is
+       (=
+        (take 5 (repeat true))
+        withins-range))
+
+      (is
+       (=
+        (count (:genes mutated))
+        5))
+
+      (is
+       (=
+        (:cost mutated)
+        Double/MAX_VALUE)))))
