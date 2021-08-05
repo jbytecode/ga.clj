@@ -53,8 +53,8 @@
 
 (defn cga-single-step [cost-fn prob-vector popsize]
   (let
-   [[ch1 ch2]     (take 2 (repeatedly #(sample prob-vector)))
-    [cost1 cost2] (map cost-fn [ch1 ch2])
+   [[ch1 ch2]     (pvalues (sample prob-vector) (sample prob-vector))
+    [cost1 cost2] (pvalues (cost-fn ch1) (cost-fn  ch2))
     winner        (if (< cost1 cost2) ch1 ch2)
     loser         (if (< cost1 cost2) ch2 ch1)]
     (update-prob-vector winner loser prob-vector popsize)))
