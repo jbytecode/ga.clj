@@ -45,3 +45,33 @@
         (count genes)
         (count min-range)
         (count max-range))))))
+
+
+(deftest test-arithmetic-crossover
+  (testing "Arithmetic crossover"
+    (let
+     [alpha              0.6
+      inv-alpha          0.4
+      min-range          [100 200 -300 0 -200]
+      max-range          [500 300 500 100 -100]
+      [ch1, ch2]         (take 2
+                               (repeatedly
+                                #(r/create-chromosome
+                                  min-range
+                                  max-range)))
+      [off1 off2]          (r/arithmetic-crossover ch1 ch2
+                                                   :alpha alpha)]
+
+      (is
+       (=
+        (map #(+
+               (* alpha %1)
+               (* inv-alpha %2)) (:genes ch1) (:genes ch2))
+        (:genes off1)))
+
+      (is
+       (=
+        (map #(+
+               (* alpha %1)
+               (* inv-alpha %2)) (:genes ch2) (:genes ch1))
+        (:genes off2))))))
