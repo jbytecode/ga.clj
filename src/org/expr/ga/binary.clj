@@ -79,7 +79,7 @@
     new-genes (for [gene (:genes ch)] (if (< (rand) prob) (flip gene) gene))]
     {:genes new-genes :cost Double/MAX_VALUE}))
 
-(defn generation [pop cost-fn selection-fn crossover-fn mutation-fn mutation-prob]
+(defn generation [pop cost-fn selection-fn crossover-fn mutation-fn mutation-prob mapfn]
   (let
    [popsize         (count pop)
     popc            (calculate-costs pop cost-fn)
@@ -87,7 +87,7 @@
                                                      popc
                                                      (selection-fn)
                                                      (crossover-fn)
-                                                     (map #(mutation-fn mutation-prob %1)))))
+                                                     (mapfn #(mutation-fn mutation-prob %1)))))
     new-pop         (->>
                      (concat popc (calculate-costs new-gen cost-fn))
                      (sort-by :cost)
@@ -101,12 +101,14 @@
                     mutation-fn
                     crossover-fn
                     mutation-prob
-                    iters] :or {popsize 20
+                    iters
+                    mapfn] :or {popsize 20
                                 selection-fn tournament-selection
                                 mutation-fn mutation
                                 crossover-fn one-point-crossover
                                 mutation-prob 0.1
-                                iters 100}}]
+                                iters 100
+                                mapfn pmap}}]
   (let [initial-population     (create-population popsize chsize)
         generation-fn  (fn [pop]
                          (generation
@@ -115,7 +117,8 @@
                           selection-fn
                           crossover-fn
                           mutation-fn
-                          mutation-prob))
+                          mutation-prob
+                          mapfn))
         last-population (last (take iters (iterate generation-fn initial-population)))
         best-chromosome (first (sort-by :cost last-population))
         best-solution   (:genes best-chromosome)
