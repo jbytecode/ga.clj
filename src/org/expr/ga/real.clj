@@ -13,6 +13,9 @@
   {:genes (map #(random-uniform %1 %2) lower-vector upper-vector)
    :cost Double/MAX_VALUE})
 
+(defn create-population [popsize lower-vector upper-vector]
+  (take popsize (repeatedly #(create-chromosome lower-vector upper-vector))))
+
 (defn arithmetic-crossover [ch1 ch2 & {:keys [alpha] :or {alpha 0.5}}]
   (let
    [inv-alpha (- 1.0 alpha)

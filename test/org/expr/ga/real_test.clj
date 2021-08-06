@@ -165,3 +165,24 @@
        (=
         (:cost mutated)
         Double/MAX_VALUE)))))
+
+
+(deftest test-create-population
+  (testing "Create population of real chromosomes"
+    (let
+     [popsize      20
+      lower        [0.0 0.0 0.0]
+      upper        [10.0 10.0 10.0]
+      pop          (r/create-population popsize lower upper)
+      ch-top       (nth pop 0)
+      withins-range      (map #(and (>= %1 %2) (<= %1 %3))
+                              (:genes ch-top)
+                              lower
+                              upper)]
+      (is
+       (= (count pop) popsize))
+
+      (is
+       (=
+        (take (count (:genes ch-top)) (repeat true))
+        withins-range)))))
